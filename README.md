@@ -76,13 +76,15 @@ Then, please see the documentation below on how to use JStream in the client.
 > Checks the server for any state changes using the method described at the top of this `README`, logs to the console the result of the operation, and calls a custom callback function if the state is updated
 > This method will be called automatically by JStream, so there is no need to use this method in your code.
 
-`updateState(newState)`
+`updateState(newState, forced)`
 
 > Updates the state on the server and across all subscribed clients
 >
 > `String newState` - the new state (please keep in mind that the new state counts towards the 2048 character request limit)
 >
-> Returns `true` upon successful completion, logs to the console the result of the operation (if the request fails, it will continue to try again every second)
+> `Boolean forced` (optional)  - whether to continue to try every second if the request fails (defaults to `true`)
+>
+> Returns `true` upon successful completion, logs to the console the result of the operation (if the request fails, it will continue to try again every second if the `forced` parameter is set to `true` or unspecified)
 
 `onStateChange(callback)`
 
