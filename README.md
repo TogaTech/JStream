@@ -1,3 +1,15 @@
+# Table of Contents:
+1. [JStream by TogaTech](https://github.com/TogaTech/JStream/blob/main/README.md#jstream-by-togatech)
+    * [How JStream Works](https://github.com/TogaTech/JStream/blob/main/README.md#how-jstream-works)
+2. [Client-side](https://github.com/TogaTech/JStream/blob/main/README.md#client-side)
+    * [Getting Started](https://github.com/TogaTech/JStream/blob/main/README.md#getting-started)
+    * [Documentation](https://github.com/TogaTech/JStream/blob/main/README.md#doumentation)
+        * [Constructor](https://github.com/TogaTech/JStream/blob/main/README.md#constructor)
+        * [Methods](https://github.com/TogaTech/JStream/blob/main/README.md#methods)
+        * [Variables](https://github.com/TogaTech/JStream/blob/main/README.md#variables)
+        * [Other Classes](https://github.com/TogaTech/JStream/blob/main/README.md#other-classes)
+3. [Server-side](https://github.com/TogaTech/JStream/blob/main/README.md#other-classes)
+
 # JStream by TogaTech
 JStream by TogaTech is a client-side method to transmit live data between any number of web browser clients without the use of sockets or websockets. By default, the program uses the TogaTech JStream server to store and communicate data, but (coming soon) server owners can choose to download and host their own JStream servers on any hosting providers that support PHP and MySQL (and can withstand a PHP running time of 70 seconds). Server owners who host JStream can use SQL to send data instantly to subscribed clients.
 
