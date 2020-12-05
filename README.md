@@ -18,17 +18,21 @@ Then, please see the documentation below on how to use JStream in the client.
 
 ## Doumentation
 
+### Constructor
+
 `new JStream(uuidInit, callback, serverInit)`
 
 > constructor to create a new JStream instance
 > 
-> `String uuidInit` - the UUID for the instance (used to communicate with other clients, we recommend you generate a lengthy UUID that is difficult to guess)
+> `String uuidInit` - the UUID for the instance (used to communicate with other clients, we recommend you generate a lengthy UUID that is difficult to guess, please keep in mind that UUID will be used upon every request and counts towards the 2048 character request limit)
 > 
 > `function callback` (optional) - the callback function for when the state is updated, callback function can have one parameter that contains the new state (this can be set later in the program)
 > 
 > `String serverInit` (optional) - the server hosting JStream (defaults to `https://jstream.togatech.org/server/`)
 >
 > Logs to the console the result of the operation
+
+### Methods
 
 `toString()`
 
@@ -57,7 +61,27 @@ Then, please see the documentation below on how to use JStream in the client.
 `ping()` - **INTERNAL METHOD**
 
 > **THIS METHOD IS ONLY INTENDED FOR INTERNAL USE BY THE JSTREAM INSTANCE, NOT BY ANY PROGRAMS**
-> Checks the server for any state changes using the method described at the top of this `README`, logs to the console the result of the operation
+> Checks the server for any state changes using the method described at the top of this `README`, logs to the console the result of the operation, and calls a custom callback function if the state is updated
+> This method will be called automatically by JStream, so there is no need to use this method in your code.
+
+`updateState(newState)`
+
+> Updates the state on the server and across all subscribed clients
+>
+> `String newState` - the new state (please keep in mind that the new state counts towards the 2048 character request limit)
+>
+> Returns `true` upon successful completion, logs to the console the result of the operation (if the request fails, it will continue to try again every second)
+
+`onStateChange(callback)`
+
+> sets the callback function for when the state is changed
+>
+> `function callback` - the callback function for when the state is updated, callback function can have one parameter that contains the new state
+>
+> Returns `true` upon successful completion
+
+### Variables
+
 
 # Server-side
 Server-side code for self-hosting JStream will be coming in the near future.
