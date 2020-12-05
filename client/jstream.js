@@ -2,6 +2,8 @@ console.log("%cPowered by TogaTech\n\n%cThis website uses JStream for live updat
 class JStream {
 	constructor(uuidInit, callback, serverInit) {
 		this.state = "";
+		this.authcode = "";
+		this.auth = true;
 		this.stateCallback = callback;
 		if(serverInit == null) {
 			this.server = "https://jstream.togatech.org/server/";
@@ -10,19 +12,8 @@ class JStream {
 		}
 		this.uuid = uuidInit;
 		this.streamOpen = false;
-		this.request(this.server + "connect?uuid=" + this.uuid, (data) => {
-			try {
-				if(JSON.parse(data).success) {
-					console.log("[JStream] " + JSON.parse(data).message);
-					this.ping();
-				} else {
-					console.error("[JStream] Error when connecting to " + this.server + ".");
-				}
-			} catch(err) {
-				console.log(err);
-				console.error("[JStream] Failed to connect to " + this.server + " because there was not a valid JStream endpoint set up on the server.");
-			}
-		});
+		this.connected = false;
+		this.connect();
 	}
 
 	toString() {
@@ -41,6 +32,55 @@ class JStream {
 		xhr.send();
 	}
 
+	authenticate(username, password, store, callback) {
+		if(store == null) {
+			store = true;
+		}
+		this.request(this.server + "auth?code=" + SHA256(username + SHA256(password)), (response) => {
+			try {
+				console.log("[JStream] " + JSON.parse(response).message);
+				if(JSON.parse(response).success) {
+					if(store) {
+						this.authcode = SHA256(username + SHA256(password));
+					}
+					if(callback != null) {
+						callback(SHA256(username + SHA256(password)));
+					}
+				}
+			} catch(err) {
+				console.error("[JStream] Failed to connect to " + this.server + " because there was not a valid JStream endpoint set up on the server.");
+			}
+		});
+	}
+
+	connect() {
+		if(!this.connected) {
+			this.request(this.server + "connect?uuid=" + this.uuid, (data) => {
+				try {
+					if(JSON.parse(data).success) {
+						console.log("[JStream] " + JSON.parse(data).message);
+						this.connected = true;
+						this.ping();
+					} else {
+						console.error("[JStream] Error when connecting to " + this.server + ". " + JSON.parse(data).message);
+					}
+				} catch(err) {
+					console.error("[JStream] Failed to connect to " + this.server + " because there was not a valid JStream endpoint set up on the server.");
+				}
+			});
+		} else {
+			console.log("[JStream] JStream is already connected. Please use the disconnect method first.");
+		}
+	}
+
+	disconnect() {
+		if(!this.streamOpen) {
+			this.connected = false;
+		} else {
+			console.log("[JStream] JStream has an open stream. Please use the closeStream method first.");
+		}
+	}
+
 	openStream() {
 		this.streamOpen = true;
 		return this.streamOpen;
@@ -51,10 +91,55 @@ class JStream {
 		return this.streamOpen;
 	}
 
+	enableAuth() {
+		this.auth = true;
+		return this.auth;
+	}
+
+	disableAuth() {
+		this.auth = false;
+		return this.auth;
+	}
+
+	setStreamPermissions(read, write, admin, callback) {
+		if(read == null) {
+			read = "*";
+		}
+		if(write == null) {
+			write = "*";
+		}
+		if(admin == null) {
+			admin = "*";
+		}
+		let url = this.server + "permissions?uuid=" + this.uuid + "&read=" + read + "&write=" + write + "&admin=" + admin;
+		if(this.auth) {
+			url = this.server + "permissions?uuid=" + this.uuid + "&read=" + read + "&write=" + write + "&admin=" + admin + "&auth=" + this.authcode;
+		}
+		this.request(url, (data) => {
+			try {
+				if(JSON.parse(data).success) {
+					console.log("[JStream] " + JSON.parse(data).message);
+					if(callback != null) {
+						callback();
+					}
+				} else {
+					console.log("[JStream] Error when connecting to " + this.server + ". " + JSON.parse(data).message);
+				}
+			} catch(err) {
+				console.error("[JStream] Failed to connect to " + this.server + " because there was not a valid JStream endpoint set up on the server.");
+			}
+		});
+		
+	}
+
 	ping() {
 		if(this.streamOpen) {
 			console.log("[JStream] Ping");
-			this.request(this.server + "get?uuid=" + this.uuid + "&hash=" + SHA256(this.state), (response) => {
+			let url = this.server + "get?uuid=" + this.uuid + "&hash=" + SHA256(this.state);
+			if(this.auth) {
+				url = this.server + "get?uuid=" + this.uuid + "&hash=" + SHA256(this.state) + "&auth=" + this.authcode;
+			}
+			this.request(url, (response) => {
 				if(this.streamOpen) {
 					try {
 						if(JSON.parse(response).stateChanged) {
@@ -64,25 +149,39 @@ class JStream {
 								this.stateCallback(this.state);
 							}
 						}
-						this.ping();
-					} catch(err) {
-						console.log("[JStream] Error when connecting to server, trying again in 1000ms.");
-						setTimeout(() => {
+						if(this.connected) {
 							this.ping();
-						}, 1000);
+						}
+					} catch(err) {
+						if(this.connected) {
+							console.log("[JStream] Error when connecting to server, trying again in 1000ms.");
+							setTimeout(() => {
+								this.ping();
+							}, 1000);
+						}
 					}
 				}
 			});
 		} else {
-			setTimeout(() => {
-				this.ping();
-			}, 1000);
+			if(this.connected) {
+				setTimeout(() => {
+					this.ping();
+				}, 1000);
+			}
 		}
 	}
 
-	updateState(newState) {
-		try {
-			this.request(this.server + "update?uuid=" + this.uuid + "&newState=" + newState, (response) => {
+	updateState(newState, forced) {
+		if(forced == null) {
+			forced = true;
+		}
+		
+		let url = this.server + "update?uuid=" + this.uuid + "&newState=" + newState;
+		if(this.auth) {
+			url = this.server + "update?uuid=" + this.uuid + "&newState=" + newState + "&auth=" + this.authcode;
+		}
+		this.request(url, (response) => {
+			try {
 				if(JSON.parse(response).success) {
 					this.state = newState;
 					console.log("[JStream] " + JSON.parse(response).message);
@@ -90,13 +189,17 @@ class JStream {
 				} else {
 					console.log("[JStream] " + JSON.parse(response).message);
 				}
-			});
-		} catch(err) {
-			console.log("[JStream] Error when connecting to server, trying again in 1000ms.");
-			setTimeout(() => {
-				updateState(newState);
-			}, 1000);
-		}
+			} catch(err) {
+				if(forced) {
+					console.log("[JStream] Error when connecting to server, trying again in 1000ms.");
+					setTimeout(() => {
+						updateState(newState);
+					}, 1000);
+				} else {
+					console.error("[JStream] Failed to connect to " + this.server + " because there was not a valid JStream endpoint set up on the server.");
+				}
+			}
+		});
 	}
 
 	onStateChange(callback) {
