@@ -18,5 +18,15 @@ Then, please see the documentation below on how to use JStream in the client.
 
 ## Doumentation
 
+`new JStream(uuidInit, callback, serverInit)`
+
+> constructor to create a new JStream instance
+> 
+> `uuidInit` - the UUID for the instance (used to communicate with other clients, we recommend you generate a lengthy UUID that is difficult to guess)
+> 
+> `callback` (optional) - the callback function for when the state is updated
+> 
+> `serverInit` (optional) - the server hosting JStream (defaults to `https://jstream.togatech.org/server/`)
+
 # Server-side
 Server-side code for self-hosting JStream will be coming in the near future.
