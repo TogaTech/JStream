@@ -81,7 +81,31 @@ Then, please see the documentation below on how to use JStream in the client.
 > Returns `true` upon successful completion
 
 ### Variables
+`String state` - the current state of the JStream
 
+`function stateCallback` - the callback function for when the state is updated, callback function can have one parameter that contains the new state
+
+`String server` - the server hosting JStream (defaults to `https://jstream.togatech.org/server/`)
+
+`String uuid` - the UUID for the instance (used to communicate with other clients, we recommend you generate a lengthy UUID that is difficult to guess, please keep in mind that UUID will be used upon every request and counts towards the 2048 character request limit)
+
+`Boolean streamOpen` - the current status of the stream (`true` for open, `false` for closed)
+
+`Boolean streamOpen` - the current status of the stream (`true` for open, `false` for closed)
+
+### Other Classes
+
+`SHA256(s)`
+
+> Generates the SHA-256 hash used on the server to compare if the state has changed
+>
+> `String s` - the string to hash
+>
+> Returns the SHA-256 hashed value
+>
+> Original code by Angel Marin, Paul Johnston.
+> http://www.webtoolkit.info/
+> Internal methods undocumented
 
 # Server-side
 Server-side code for self-hosting JStream will be coming in the near future.
