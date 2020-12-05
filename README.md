@@ -27,6 +27,12 @@ Then, please see the documentation below on how to use JStream in the client.
 > `function callback` (optional) - the callback function for when the state is updated, callback function can have one parameter that contains the new state (this can be set later in the program)
 > 
 > `String serverInit` (optional) - the server hosting JStream (defaults to `https://jstream.togatech.org/server/`)
+>
+> Logs to the console the result of the operation
+
+`toString()`
+
+> Returns basic data about the instance of the JStream (connected server and uuid)
 
 `request(url, callback)`
 
@@ -35,6 +41,19 @@ Then, please see the documentation below on how to use JStream in the client.
 > `String url` - the url for the `GET` request (formatted like `https://jstream.togatech.org/server/update?uuid=abc123&newState=test`)
 >
 > `function callback` - the callback function for when the request `Promise` is resolved, callback function can have one parameter that contains the result
+
+`openStream()`
+
+> opens the JStream
+> 
+> Returns `true` (the current status of the stream) if the operation is successful
+
+`closeStream()`
+
+> closes the JStream
+> 
+> Returns `false` (the current status of the stream) if the operation is successful
+
 
 # Server-side
 Server-side code for self-hosting JStream will be coming in the near future.
