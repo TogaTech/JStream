@@ -10,5 +10,8 @@ The MySQL database runs on a UUID system, where clients can subscribe to a (comp
 # Client-side
 
 ## Getting Started
+To get started with JStream, navigate to the `/client` folder and download `jstream.js`. Upload this code to your website and add the following script tag in the head of any page on which you want JStream (ensure that `jstream.js` is in the same directory as the website file or use absolute/relative paths):
+
+`<script src="jstream.js" type="text/javascript"></script>`
 
 ## Doumentation
