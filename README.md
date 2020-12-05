@@ -1,3 +1,6 @@
+# DEPRECATED
+Due to strains on our server and database (and potential strains on your server database), we've decided to suspend work on the project. You can still download the client-side code if you would like to take a look, but we will not be posting any server-side code. 
+
 # Table of Contents:
 1. [JStream by TogaTech](https://github.com/TogaTech/JStream/blob/main/README.md#jstream-by-togatech)
     * [How JStream Works](https://github.com/TogaTech/JStream/blob/main/README.md#how-jstream-works)
