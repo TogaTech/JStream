@@ -14,4 +14,9 @@ To get started with JStream, navigate to the `/client` folder and download `jstr
 
 `<script src="jstream.js" type="text/javascript"></script>`
 
+Then, please see the documentation below on how to use JStream in the client.
+
 ## Doumentation
+
+# Server-side
+Server-side code for self-hosting JStream will be coming in the near future.
