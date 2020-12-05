@@ -24,9 +24,17 @@ Then, please see the documentation below on how to use JStream in the client.
 > 
 > `String uuidInit` - the UUID for the instance (used to communicate with other clients, we recommend you generate a lengthy UUID that is difficult to guess)
 > 
-> `function callback` (optional) - the callback function for when the state is updated, callback function can take one parameter that returns the new state (this can be set later in the program)
+> `function callback` (optional) - the callback function for when the state is updated, callback function can have one parameter that contains the new state (this can be set later in the program)
 > 
 > `String serverInit` (optional) - the server hosting JStream (defaults to `https://jstream.togatech.org/server/`)
+
+`request(url, callback)`
+
+> helper method, makes a `GET` request to the url and sends data to a callback function
+>
+> `String url` - the url for the `GET` request (formatted like `https://jstream.togatech.org/server/update?uuid=abc123&newState=test`)
+>
+> `function callback` - the callback function for when the request `Promise` is resolved, callback function can have one parameter that contains the result
 
 # Server-side
 Server-side code for self-hosting JStream will be coming in the near future.
