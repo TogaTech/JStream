@@ -58,6 +58,30 @@ Then, please see the documentation below on how to use JStream in the client.
 >
 > `function callback` - the callback function for when the request `Promise` is resolved, callback function can have one parameter that contains the result
 
+`authenticate(username, password, store, callback)`
+
+> authenticates the JStream with credentials
+>
+> `String username` - the username
+>
+> `String password` - the password
+>
+> `Boolean store` - whether to store the authcode in the object (`true` if yes, `false` if no, defaults to `true`, required if using authentication with every request)
+>
+> `function callback` (optional) - the callback function for when the request `Promise` is resolved, callback function can have one parameter that contains the authcode
+
+`connect()`
+
+> connects to the JStream server, if no connection exists, creates a connection with a blank value and default permissions (`*` for all)
+> 
+> Returns `true` (the current status of the connection) if the operation is successful
+
+`disconnect()`
+
+> disconnects from the JStream server
+> 
+> Returns `false` (the current status of the connection) if the operation is successful
+
 `openStream()`
 
 > opens the JStream
@@ -69,6 +93,30 @@ Then, please see the documentation below on how to use JStream in the client.
 > closes the JStream
 > 
 > Returns `false` (the current status of the stream) if the operation is successful
+
+`enableAuth()`
+
+> enables authcode to be sent on every request
+> 
+> Returns `true` (the current status of auth) if the operation is successful
+
+`disableAuth()`
+
+> disables authcode to be sent on every request
+> 
+> Returns `false` (the current status of auth) if the operation is successful
+
+`setStreamPermissions(read, write, admin, callback)`
+
+> sets the permissions of the stream
+>
+> `String read` - the read permission level (use `*` or `all` for everyone, `me` for only the logged in credentials, or specify a specific authcode)
+>
+> `String write` - the write permission level (use `*` or `all` for everyone, `me` for only the logged in credentials, or specify a specific authcode)
+>
+> `String admin` - the admin permission level for changing permissions (use `*` or `all` for everyone, `me` for only the logged in credentials, or specify a specific authcode)
+> 
+> `function callback` (optional) - the callback function for when the request `Promise` is resolved
 
 `ping()` - **INTERNAL METHOD**
 
@@ -97,6 +145,10 @@ Then, please see the documentation below on how to use JStream in the client.
 ### Variables
 `String state` - the current state of the JStream
 
+`String authcode` - the current authcode of the JStream
+
+`String auth` - whether to send the authcode in every JStream request (`true` if yes, `false` if no, defaults to `true`)
+
 `function stateCallback` - the callback function for when the state is updated, callback function can have one parameter that contains the new state
 
 `String server` - the server hosting JStream (defaults to `https://jstream.togatech.org/server/`)
@@ -105,13 +157,13 @@ Then, please see the documentation below on how to use JStream in the client.
 
 `Boolean streamOpen` - the current status of the stream (`true` for open, `false` for closed)
 
-`Boolean streamOpen` - the current status of the stream (`true` for open, `false` for closed)
+`Boolean connected` - whether the stream is connected (`true` for connected, `false` for disconnected)
 
 ### Other Classes
 
 `SHA256(s)`
 
-> Generates the SHA-256 hash used on the server to compare if the state has changed
+> Generates the SHA-256 hash used on the server to compare if the state has changed, also used to generate an authcode
 >
 > `String s` - the string to hash
 >
